@@ -3,8 +3,8 @@ const { default: mongoose } = require("mongoose");
 //create schema for comment
 const commentSchema = new mongoose.Schema({
   post: {
-    type: String,
-    required: false,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Post", //reference to the post model
   },
   user: {
     type: String,

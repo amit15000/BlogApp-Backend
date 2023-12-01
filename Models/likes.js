@@ -2,8 +2,8 @@
 const mongoose = require("mongoose");
 const likeSchema = new mongoose.Schema({
   post: {
-    type: String,
-    required: false,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Post", //reference to the post model
   },
   user: {
     type: String,

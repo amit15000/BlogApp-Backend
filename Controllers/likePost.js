@@ -1,38 +1,26 @@
-//import schema
-const LIKE = require("../Models/likes.js");
-const POST = require("../Models/Post.js");
+const LIKES = require("../Models/likes");
+const Post = require("../Models/Post");
 exports.likePost = async (req, res) => {
   try {
-    const { id } = req.params;
-    const item = await POST.findById({ _id: id });
-    if (!item) {
-      //means item not found
-      return res.status(404).json({
-        success: false,
-        data: item,
-        message: "Item not found with this ID",
-      });
-    }
+    const { post, user } = req.body;
+    const newLike = new LIKES({
+      post,
+      user,
+    });
 
-    //item found
-    const post = id;
-    const { user } = req.body;
-    const likeItem = await LIKE.create({ post, user });
-    if (!likeItem) {
-      //item found but not liked
-      return res.status(500).json({
-        success: false,
-        data: item,
-        message: "Item not liked",
-      });
-    }
+    const saveLike = await newLike.save();
 
-    //item found and liked
-    res.status(200).json({
+    //also update that post
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      { _id: post },
+      { $push: { likes: saveLike._id } },
+      { new: true }
+    ).populate("likes");
+
+    res.json({
       success: true,
-      Post_data: item,
-      Like_data: likeItem,
-      message: "Items liked successfully",
+      updatedPost: updatedPost,
     });
   } catch (err) {
     res.status(500).json({

@@ -8,7 +8,7 @@ const { createComment } = require("../Controllers/creatComment.js");
 
 //router was writeen in function and that function was never been called.
 router.post("/createPost", createPost);
-router.get("/getPosts", getPosts);
-router.post("/likes/like/:id", likePost);
-router.post("/comments/comment/:id", createComment);
+// router.get("/getPosts", getPosts);
+router.post("/likes/like", likePost);
+router.post("/comments/comment", createComment);
 module.exports = router;

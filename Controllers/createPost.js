@@ -1,22 +1,24 @@
 const Post = require("../Models/Post");
-
 exports.createPost = async (req, res) => {
-  //import model
-
   try {
-    const { title, description } = req.body;
-    const item = await Post.create({ title, description });
+    const { user, title, description } = req.body;
 
-    res.status(200).json({
-      success: true,
-      data: item,
-      message: "Item inserted successfully",
+    const newPost = new Post({
+      user,
+      title,
+      description,
     });
+
+    //save object
+    const savedPost = await newPost.save();
+    res.status(200).json({
+      Post: savedPost,
+      Message: "Inserted Successfully",
+    });
+    //upadate the post's comment array
   } catch (err) {
     res.status(500).json({
-      success: false,
-      data: err.message,
-      message: "Item insertion failed",
+      Error: err.message,
     });
   }
 };
