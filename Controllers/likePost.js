@@ -30,3 +30,22 @@ exports.likePost = async (req, res) => {
     });
   }
 };
+exports.unlikePost = async (req, res) => {
+  try {
+    const { postID, likeID } = req.body;
+
+    await LIKES.findOneAndDelete({ _id: likeID, post: postID });
+    await LIKES.findByIdAndDelete({ _id: likeID });
+    await Post.findByIdAndUpdate({ _id: postID }, { $pull: { likes: likeID } });
+    res.json({
+      Like: "Like removed succefully",
+      Post: "Post updated succefully",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      data: err.message,
+      message: "Server internal error",
+    });
+  }
+};
